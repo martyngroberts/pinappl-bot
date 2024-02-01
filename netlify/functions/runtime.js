@@ -2,9 +2,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const axios = require('axios');
-const processChatLocation = require('./functions/processChatLocation');
-const claimPrize = require('./functions/claimPrize');
-const getUnclaimedPrize = require('./functions/getUnclaimedPrize');
+const processChatLocation = require('../../utils/processChatLoction');
+const claimPrize = require('../../utils/claimPrize');
+const getUnclaimedPrize = require('../../utils/getUnclaimedPrize');
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
