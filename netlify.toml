@@ -1,3 +1,6 @@
 [template.environment]
   BOT_TOKEN = "Change me to your Telegram bot token"
   API_ENDPOINT = "http://localhost:5000/pinappl-dev/europe-west3/api/graphql"
+
+[functions]
+node_bundler = "esbuild"
