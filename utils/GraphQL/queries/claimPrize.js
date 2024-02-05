@@ -1,4 +1,4 @@
-import getClient from '../getClient'
+import getClient from '../getClient.js'
 
 const claimPrize = async (chatId) => {
     const gqlClient = getClient()

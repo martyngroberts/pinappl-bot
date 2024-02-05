@@ -17,7 +17,7 @@ Follow the instructions below to set up and run this project locally on your mac
 1. **Clone the Repository:**
 
 ```bash
-git clone https://github.com/squareballdigital/pinappl-telegram-bot.git && codepinappl-telegram-bot/
+git clone https://github.com/martyngroberts/pinappl-bot.git && code pinappl-bot/
 ```
 
 2. **Install Dependencies:**
@@ -31,7 +31,7 @@ bun install
 Create a .env file and add the following variables:
 ```bash
 API_ENDPOINT=http://localhost:5000/pinappl-dev/europe-west3/api/graphql
-BOT_TOKEN=
+BOT_TOKEN=*
 ```
 
 4. **Run the starter site locally:**
@@ -39,3 +39,5 @@ BOT_TOKEN=
 ```bash
 bun start
 ```
+
+You can now interact with the bot at [http://localhost:8888/.netlify/functions/runtime](http://localhost:8888/.netlify/functions/runtime) using an ADE like [Postman](https://www.postman.com/)

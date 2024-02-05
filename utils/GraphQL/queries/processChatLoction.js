@@ -1,4 +1,4 @@
-import getClient from '../getClient'
+import getClient from '../getClient.js'
 
 const processChatLocation = async (chatId, lat, lng) => {
   const gqlClient = getClient()

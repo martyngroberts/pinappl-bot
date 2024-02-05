@@ -1,8 +1,9 @@
 {
-  "name": "pinappl-telegram-bot",
+  "name": "pinappl-bot",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "runtime.js",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "dotenv": "^16.3.1",
     "graphql": "^16.8.1",
@@ -11,6 +12,6 @@
     "axios": "1.6.7"
   },
   "scripts": {
-    "start": "node netlify/functions/update.js"
+    "start": "netlify dev"
   }
 }

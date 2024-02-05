@@ -1,9 +1,11 @@
+import dotenv from 'dotenv'
 import axios from 'axios'
+dotenv.config()
 
 // Importing GraphQL Queries
-import processChatLocation from '../../utils/GraphQL/queries/processChatLoction'
-import getUnclaimedPrize from '../../utils/GraphQL/queries/getUnclaimedPrize'
-import claimPrize from '../../utils/GraphQL/queries/claimPrize'
+import processChatLocation from '../../utils/GraphQL/queries/processChatLoction.js'
+import getUnclaimedPrize from '../../utils/GraphQL/queries/getUnclaimedPrize.js'
+import claimPrize from '../../utils/GraphQL/queries/claimPrize.js'
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`
@@ -36,7 +38,7 @@ const sendLocation = async (chatId, latitude, longitude) => {
 }
 
 // Main Handler
-exports.handler = async (event) => {
+export const handler = async (event) => {
     const { message, edited_message } = JSON.parse(event.body)
     const msg = message || edited_message
 
@@ -45,6 +47,7 @@ exports.handler = async (event) => {
     }
 
     const chatId = msg.chat.id
+    console.log(chatId, 'chatId')
     initUserState(chatId)
 
     // Handling Location Updates
