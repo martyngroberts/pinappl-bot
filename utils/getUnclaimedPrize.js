@@ -1,4 +1,4 @@
-const getClient = require('../utils/GraphQL/getClient')
+const getClient = require('./GraphQL/getClient')
 
 const claimPrize = async (chatId) => {
     const gqlClient = getClient()
