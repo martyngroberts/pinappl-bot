@@ -1,8 +1,8 @@
-const getClient = require('./GraphQL/getClient')
+import getClient from '../getClient'
 
 const processChatLocation = async (chatId, lat, lng) => {
-    const gqlClient = getClient()
-    const query = `
+  const gqlClient = getClient()
+  const query = `
         mutation {
         telegramProcessLocation(chatId: "${chatId}", lat:"${lat}",lng:"${lng}") {
           prizeItemId
@@ -21,9 +21,9 @@ const processChatLocation = async (chatId, lat, lng) => {
     `
 
 
-     const results = await gqlClient.request(query)
-    return results.telegramProcessLocation
+  const results = await gqlClient.request(query)
+  return results.telegramProcessLocation
 }
 
 
-module.exports = processChatLocation
+export default processChatLocation

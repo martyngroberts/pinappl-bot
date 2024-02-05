@@ -1,16 +1,16 @@
-const dotenv = require('dotenv')
-dotenv.config()
+import axios from 'axios'
 
-const axios = require('axios')
-const processChatLocation = require('../../utils/processChatLoction')
-const claimPrize = require('../../utils/claimPrize')
-const getUnclaimedPrize = require('../../utils/getUnclaimedPrize')
+// Importing GraphQL Queries
+import processChatLocation from '../../utils/GraphQL/queries/processChatLoction'
+import getUnclaimedPrize from '../../utils/GraphQL/queries/getUnclaimedPrize'
+import claimPrize from '../../utils/GraphQL/queries/claimPrize'
 
 const BOT_TOKEN = process.env.BOT_TOKEN
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`
 
 const userStates = {}
 
+// State Management and Actions
 const initUserState = (chatId) => {
     if (!userStates[chatId]) {
         userStates[chatId] = { state: 'pending', tracking: false }
@@ -35,6 +35,7 @@ const sendLocation = async (chatId, latitude, longitude) => {
     })
 }
 
+// Main Handler
 exports.handler = async (event) => {
     const { message, edited_message } = JSON.parse(event.body)
     const msg = message || edited_message
@@ -51,6 +52,8 @@ exports.handler = async (event) => {
         userStates[chatId].tracking = true
         console.log('checking location')
 
+        await sendMessage(chatId, "Nice! Now we will be tracking your steps and let you know if you stumble across any prizes!")
+
         try {
             const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
             await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
@@ -64,6 +67,8 @@ exports.handler = async (event) => {
         console.log('location not live')
         userStates[chatId].tracking = false
         await sendMessage(chatId, "We're no longer tracking your location, feel free to share your live location with us for the chance to stumble across prizes!")
+    } else if (msg.location && !msg.location.live_period) {
+        sendMessage(chatId, "Oops, looks like you sent a single location. In order to find prizes, you will need to share your live location with us.")
     }
 
     // Handling Text Commands
@@ -74,6 +79,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, body: 'Command processed' }
 }
 
+// Text Command Handlers
 const handleTextCommands = async (chatId, text) => {
     const command = text.toLowerCase()
 
@@ -103,14 +109,15 @@ const handleTextCommands = async (chatId, text) => {
             await handleCancel(chatId)
             break
         default:
-            if(!userStates[chatId]) {
+            if (!userStates[chatId]) {
                 await sendMessage(chatId, "Hey welcome to Pinappl!")
                 await sendMessage(chatId, "To start, all you have to do is share your live location with us, and we'll alert you if you stumble across a prize! \nFor a list of commands you can always type /help")
 
                 break
+            } else if (userStates[chatId].tracking == true) {
+                sendMessage(msg.chat.id, "Hey again! We're currently tracking your location and will alert you if you stumble across any prizes. Good luck!")
             } else {
-                await sendMessage(chatId, "Sorry, I didn't understand that command. Try typing /help to see the available list of commands.")
-                break
+                sendMessage(chatId, "Hey again! To collect prizes all you have to do is share your live location with us, and we'll alert you if you stumble across a prize!")
             }
     }
 }

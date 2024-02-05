@@ -1,4 +1,4 @@
-const getClient = require('./GraphQL/getClient')
+import getClient from '../getClient'
 
 const claimPrize = async (chatId) => {
     const gqlClient = getClient()
@@ -13,5 +13,4 @@ const claimPrize = async (chatId) => {
     return results.telegramClaimPrize
 }
 
-
-module.exports = claimPrize
+export default claimPrize

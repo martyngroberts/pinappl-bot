@@ -1,4 +1,4 @@
-const { GraphQLClient } = require('graphql-request')
+import { GraphQLClient } from 'graphql-request'
 
 const getClient = () => {
   const endpoint = process.env.API_ENDPOINT
@@ -6,4 +6,4 @@ const getClient = () => {
   return graphQLClient
 }
 
-module.exports = getClient
+export default getClient
