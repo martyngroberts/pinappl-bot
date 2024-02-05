@@ -51,9 +51,8 @@ export const handler = async (event) => {
     initUserState(chatId)
 
     // Handling Location Updates
-    if (msg.location && msg.location?.live_period) {
+    if (msg.location && msg.location?.live_period && !userStates[chatId].tracking) {
         userStates[chatId].tracking = true
-        console.log('checking location')
 
         await sendMessage(chatId, "Nice! Now we will be tracking your steps and let you know if you stumble across any prizes!")
 
@@ -66,12 +65,11 @@ export const handler = async (event) => {
         } catch (_) {
             console.log('prize not won')
         }
-    } else if (msg.location && !msg.location?.live_period) {
-        console.log('location not live')
+    } else if (!msg.location?.live_period && userStates[chatId].tracking && !msg.text) {
         userStates[chatId].tracking = false
         await sendMessage(chatId, "We're no longer tracking your location, feel free to share your live location with us for the chance to stumble across prizes!")
-    } else if (msg.location && !msg.location.live_period) {
-        sendMessage(chatId, "Oops, looks like you sent a single location. In order to find prizes, you will need to share your live location with us.")
+    } else if (msg.location && !msg.location.live_period && !userStates[chatId].tracking) {
+        await sendMessage(chatId, "Oops, looks like you sent a single location. In order to find prizes, you will need to share your live location with us.")
     }
 
     // Handling Text Commands
@@ -117,10 +115,10 @@ const handleTextCommands = async (chatId, text) => {
                 await sendMessage(chatId, "To start, all you have to do is share your live location with us, and we'll alert you if you stumble across a prize! \nFor a list of commands you can always type /help")
 
                 break
-            } else if (userStates[chatId].tracking == true) {
-                sendMessage(msg.chat.id, "Hey again! We're currently tracking your location and will alert you if you stumble across any prizes. Good luck!")
+            } else if (userStates[chatId].tracking) {
+                await sendMessage(chatId, "Hey again! We're currently tracking your location and will alert you if you stumble across any prizes. Good luck!")
             } else {
-                sendMessage(chatId, "Hey again! To collect prizes all you have to do is share your live location with us, and we'll alert you if you stumble across a prize!")
+                await sendMessage(chatId, "Hey again! To collect prizes all you have to do is share your live location with us, and we'll alert you if you stumble across a prize!")
             }
     }
 }
