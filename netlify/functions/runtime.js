@@ -54,6 +54,7 @@ export const handler = async (event) => {
     if (msg.location && msg.location?.live_period && userStates[chatId].tracking) {
         try {
             const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
+            console.log(prize, 'prize')
             await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
             await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
             await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
