@@ -51,6 +51,17 @@ export const handler = async (event) => {
     initUserState(chatId)
 
     // Handling Location Updates
+    if (msg.location && msg.location?.live_period && userStates[chatId].tracking) {
+        try {
+            const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
+            await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
+            await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
+            await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
+            await sendMessage(chatId, 'Once you have found it, speak to the representative and type /claim to receive your prize!')
+        } catch (_) {
+            console.log('prize not won')
+        }
+    }
     if (msg.location && msg.location?.live_period && !userStates[chatId].tracking) {
         userStates[chatId].tracking = true
 

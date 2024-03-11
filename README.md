@@ -42,7 +42,7 @@ bun start
 
 5. **Obtain personal chatId:**
 
-Naviagte to [Netlify Logs](https://app.netlify.com/sites/pinappl-bot/logs/functions/runtime), send a message to the bot through [Telegram](https://t.me/pinnapl_bot
+Naviagte to [Netlify Logs](https://app.netlify.com/sites/pinappl-bot/logs/functions/runtime), send a message to the bot through [Telegram](https://t.me/Pinnaplbot
 ) and save your chatId for successful interaction in development
 
 You can now interact with the bot at [http://localhost:8888/.netlify/functions/runtime](http://localhost:8888/.netlify/functions/runtime) using an ADE like [Postman](https://www.postman.com/)
