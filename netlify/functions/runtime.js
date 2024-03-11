@@ -58,8 +58,8 @@ export const handler = async (event) => {
             await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
             await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
             await sendMessage(chatId, 'Once you have found it, speak to the representative and type /claim to receive your prize!')
-        } catch (_) {
-            console.log('prize not won')
+        } catch (e) {
+            console.log('prize not won', e)
         }
     }
     if (msg.location && msg.location?.live_period && !userStates[chatId].tracking) {
