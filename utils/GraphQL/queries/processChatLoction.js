@@ -22,6 +22,7 @@ const processChatLocation = async (chatId, lat, lng) => {
 
 
   const results = await gqlClient.request(query)
+  console.log(results, 'results')
   return results.telegramProcessLocation
 }
 
