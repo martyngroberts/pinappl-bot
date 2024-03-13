@@ -46,3 +46,25 @@ Naviagte to [Netlify Logs](https://app.netlify.com/sites/pinappl-bot/logs/functi
 ) and save your chatId for successful interaction in development
 
 You can now interact with the bot at [http://localhost:8888/.netlify/functions/runtime](http://localhost:8888/.netlify/functions/runtime) using an ADE like [Postman](https://www.postman.com/)
+
+Here is an exmaple of what the request body should look like in PostMan:
+  ```bash
+    {
+      message_id: 79,
+      from: {
+        id: ${find yours at netlify logs},
+        is_bot: false,
+        first_name: ${your own},
+        last_name: ${your own},
+        language_code: "en"
+      },
+      chat: {
+        id: ${find yours at netlify logs},
+        first_name: ${your own},
+        last_name: ${your own},
+        type: "private"
+      },
+      date: 1710337745,
+      text: "/help"
+    }
+  ```

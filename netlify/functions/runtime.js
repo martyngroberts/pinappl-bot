@@ -41,7 +41,7 @@ const sendLocation = async (chatId, latitude, longitude) => {
 export const handler = async (event) => {
     const { message, edited_message } = JSON.parse(event.body)
     const msg = message || edited_message
-    console.log(msg, 'msg')
+    console.log(event.body, 'msg')
 
     if (!msg) {
         return { statusCode: 200, body: 'No message' }
