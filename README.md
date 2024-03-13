@@ -2,7 +2,7 @@
 
 ## Technology Stack
 
-- **Frontend:**
+- **Backend:**
   - dotenv: Environment variable management
   - graphql: Data query and manipulation language for APIs
   - graphql-request: Minimal GraphQL client
