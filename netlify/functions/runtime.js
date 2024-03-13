@@ -60,6 +60,7 @@ export const handler = async (event) => {
         if (userStates[chatId].state === 'pending') {
             try {
                 const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
+                userStates[chatId].state = 'claim'
                 await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
                 await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
                 await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
@@ -129,7 +130,6 @@ const handleTextCommands = async (chatId, text) => {
 const handleClaim = async (chatId) => {
     try {
         const unclaimedPrize = await getUnclaimedPrize(chatId)
-        userStates[chatId].state = 'claim'
         await sendMessage(chatId, `Prize time! Please /confirm or /cancel that you have found the representative at the pickup area and received the following prize: \n${unclaimedPrize.prizeName}`)
         await sendMessage(chatId, "Please note that confirming before receiving your prize may affect your ability to claim your prize.")
     } catch (_) {
