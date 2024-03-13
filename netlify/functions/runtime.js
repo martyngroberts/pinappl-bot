@@ -130,6 +130,7 @@ const handleTextCommands = async (chatId, text) => {
 const handleClaim = async (chatId) => {
     try {
         const unclaimedPrize = await getUnclaimedPrize(chatId)
+        userStates[chatId].state = 'claim'
         await sendMessage(chatId, `Prize time! Please /confirm or /cancel that you have found the representative at the pickup area and received the following prize: \n${unclaimedPrize.prizeName}`)
         await sendMessage(chatId, "Please note that confirming before receiving your prize may affect your ability to claim your prize.")
     } catch (_) {
