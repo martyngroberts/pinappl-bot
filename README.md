@@ -49,22 +49,32 @@ You can now interact with the bot at [http://localhost:8888/.netlify/functions/r
 
 Here is an exmaple of what the request body should look like in PostMan:
   ```bash
-    {
-      message_id: 79,
-      from: {
-        id: ${find yours at netlify logs},
-        is_bot: false,
-        first_name: ${your own},
-        last_name: ${your own},
-        language_code: "en"
-      },
-      chat: {
-        id: ${find yours at netlify logs},
-        first_name: ${your own},
-        last_name: ${your own},
-        type: "private"
-      },
-      date: 1710337745,
-      text: "/help"
+{
+    "update_id": 381423972,
+        "message": {
+        "message_id": 83,
+            "from": {
+            "id": Find in Netlify Logs,
+                "is_bot": false,
+                    "first_name": "Str",
+                        "last_name": "Str",
+                            "language_code": "en"
+        },
+        "chat": {
+            "id": Find in Netlify Logs,
+                "first_name": "Str",
+                    "last_name": "Str",
+                        "type": "private"
+        },
+        "date": 1710338470,
+            "text": "/help",
+                "location": {
+            "latitude": Int,
+                "longitude": -Int,
+                    "live_period": 3599,
+                        "heading": 212,
+                            "horizontal_accuracy": 6.000000
+        }
     }
+}
   ```

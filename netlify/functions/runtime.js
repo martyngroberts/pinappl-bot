@@ -41,7 +41,6 @@ const sendLocation = async (chatId, latitude, longitude) => {
 export const handler = async (event) => {
     const { message, edited_message } = JSON.parse(event.body)
     const msg = message || edited_message
-    console.log(event.body, 'msg')
 
     if (!msg) {
         return { statusCode: 200, body: 'No message' }
@@ -53,30 +52,21 @@ export const handler = async (event) => {
 
     // Handling Location Updates
     if (msg.location && msg.location?.live_period && userStates[chatId].tracking) {
-        try {
-            const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
-            console.log(prize, 'prize')
-            await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
-            await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
-            await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
-            await sendMessage(chatId, 'Once you have found it, speak to the representative and type /claim to receive your prize!')
-        } catch (e) {
-            console.log('prize not won', e)
+        if (!userStates[chatId].tracking) {
+            userStates[chatId].tracking = true
+
+            await sendMessage(chatId, "Nice! Now we will be tracking your steps and let you know if you stumble across any prizes!")
         }
-    }
-    if (msg.location && msg.location?.live_period && !userStates[chatId].tracking) {
-        userStates[chatId].tracking = true
-
-        await sendMessage(chatId, "Nice! Now we will be tracking your steps and let you know if you stumble across any prizes!")
-
-        try {
-            const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
-            await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
-            await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
-            await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
-            await sendMessage(chatId, 'Once you have found it, speak to the representative and type /claim to receive your prize!')
-        } catch (_) {
-            console.log('prize not won')
+        if (userStates[chatId].state === 'pending') {
+            try {
+                const prize = await processChatLocation(chatId, msg.location.latitude, msg.location.longitude)
+                await sendMessage(chatId, `Congrats! You have won the following prize! ${prize.prizeName}`)
+                await sendMessage(chatId, 'To claim your prize, visit the collection area located at the directions below!')
+                await sendLocation(chatId, prize.prizeCollectionLocation.lat, prize.prizeCollectionLocation.lng)
+                await sendMessage(chatId, 'Once you have found it, speak to the representative and type \n/claim to receive your prize!')
+            } catch (_) {
+                console.log('prize not won')
+            }
         }
     } else if (!msg.location?.live_period && userStates[chatId].tracking && !msg.text) {
         userStates[chatId].tracking = false
@@ -116,10 +106,10 @@ const handleTextCommands = async (chatId, text) => {
         case '/myprize':
             await handleMyPrize(chatId)
             break
-        case 'confirm':
+        case '/confirm':
             await handleConfirm(chatId)
             break
-        case 'cancel':
+        case '/cancel':
             await handleCancel(chatId)
             break
         default:
@@ -140,7 +130,7 @@ const handleClaim = async (chatId) => {
     try {
         const unclaimedPrize = await getUnclaimedPrize(chatId)
         userStates[chatId].state = 'claim'
-        await sendMessage(chatId, `Prize time! Please confirm that you have found the representative at the pickup area and received the following prize: \n\n${unclaimedPrize.prizeName}`)
+        await sendMessage(chatId, `Prize time! Please /confirm or /cancel that you have found the representative at the pickup area and received the following prize: \n${unclaimedPrize.prizeName}`)
         await sendMessage(chatId, "Please note that confirming before receiving your prize may affect your ability to claim your prize.")
     } catch (_) {
         await sendMessage(chatId, "Looks like you don't have any prizes to claim at this point. Keep sharing your location and we'll notify you if you stumble across any prizes!")
@@ -161,7 +151,7 @@ const handlePickup = async (chatId) => {
 const handleMyPrize = async (chatId) => {
     try {
         const unclaimedPrize = await getUnclaimedPrize(chatId)
-        await sendMessage(chatId, `Congrats! You currently are able to claim the following prize: \n\n${unclaimedPrize.prizeName}`)
+        await sendMessage(chatId, `Congrats! You currently are able to claim the following prize: \n${unclaimedPrize.prizeName}`)
     } catch (_) {
         await sendMessage(chatId, "You don't have any prizes to claim at this point.")
     }
@@ -173,16 +163,15 @@ const handleConfirm = async (chatId) => {
             await claimPrize(chatId)
             userStates[chatId].state = 'pending'
             await sendMessage(chatId, "Congrats on claiming your prize! You can now continue sharing your location to find more prizes!")
-        } catch (err) {
-            console.log(err)
+        } catch (_) {
+            console.log('prize not claimed')
         }
     }
 }
 
 const handleCancel = async (chatId) => {
     if (userStates[chatId].state === 'claim') {
-        userStates[chatId].state = 'pending'
-        await sendMessage(chatId, "No worries! Once you have found the pickup location and spoken to the representative, type /claim after receiving your prize! \n \n If you need help finding the pickup location, type /pickup")
+        await sendMessage(chatId, "No worries! Once you have found the pickup location and spoken to the representative, type /claim after receiving your prize! \nIf you need help finding the pickup location, type /pickup")
     } else {
         await sendMessage(chatId, "You don't have any prizes to cancel at this point.")
     }
