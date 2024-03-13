@@ -51,7 +51,7 @@ export const handler = async (event) => {
     initUserState(chatId)
 
     // Handling Location Updates
-    if (msg.location && msg.location?.live_period && userStates[chatId].tracking) {
+    if (msg.location && msg.location?.live_period) {
         if (!userStates[chatId].tracking) {
             userStates[chatId].tracking = true
 
