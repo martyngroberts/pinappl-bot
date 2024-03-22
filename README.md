@@ -78,3 +78,12 @@ Here is an exmaple of what the request body should look like in PostMan:
     }
 }
   ```
+
+6. **Resetting the WebHook**
+
+
+If you need to reset the webhook, this is the command structure:
+
+```bash
+curl -F "url=https://bot.pinappl.com/.netlify/functions/runtime" https://api.telegram.org/bot<bot token>/setWebhook
+```
